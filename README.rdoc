@@ -1,0 +1,59 @@
+= BuboBubo
+
+BuboBubo is a fork of http://github.com/kalasjocke/listing_fu, but without ferret as backend.
+
+Like listing_fu, BuboBubo is a compact DSL for defining and searching in lists of content in your Rails app.
+
+listing_fu is a great plugin, but I've been having nothing but problems with ferret, and honestly, I don't need ferret for the amounts of data I'm using.
+
+This is a stab at the ferret, that is, shiny table creation but no indexing.
+
+The name BuboBubo comes from a species of owl whose latin name is bubo bubo. Owls apperently prey on ferrets.
+
+Most of this project is copied directly from listing_fu (including most of the examples in this README file.)
+
+== Model
+Since we're not using ferret here, I had to come up with some other smart way of doing filtering. The first thing that came to mind was named_scopes, so I rewrote the listing_filter method to define a bunch of named_scopes dynamically. The syntax for doing the lambdas in listing_filter therefore are a bit messy if you want to do some advanced stuff.
+We define our different filters we want to use in our app inside the model:
+
+  class Person < ActiveRecord::Base
+    has_many :memberships
+    has_many :groups, :through => :memberships
+  
+    has_one :account
+  
+    listing_filter :name => :name, :age => :age, :account_name => lambda {|name| {:conditions => ['id in (select person_id as id from account where name = ?', name)]} } }
+  end
+
+== View
+
+In our view we can now use our defined filters to filter the listing to find the content we want:
+
+  <% filters(@people) do |filters| %>
+    <%= filters.text_filter :name %>
+    <%= filters.options_filter :age, [12, 13, 14] %>
+  <% end %>
+    
+This is the actual listing code that renders a table with clickable headers to do the sorting:
+
+  <% listing(@people) do |listing| %>
+    <%= listing.column :name %>
+    
+    <% listing.column :age do |person| %>
+      <%= "My age is #{person.age}" %>
+    <% end %>
+    
+    <% listing.actions do |person| %>
+      <td><%= link_to 'Show', person %></td>
+      <td><%= link_to 'Edit', edit_person_path(person) %></td>
+      <td><%= link_to 'Destroy', person, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  <% end %>
+  
+== Controller
+
+Then in our controller we just use the listing method with the parameters from the view (the last hash is conditions that will be passed to ActiveRecord):
+
+  @people = Person.listing(params, {:per_page => 50}, {:order => "id ASC"})
+
+Copyright (c) 2009 mostly Joakim Ekberg, some parts Martin Frost, released under the MIT license

@@ -1,0 +1,52 @@
+8
+
+dir
+867
+https://www.d.kth.se/svn/ston/trunk/vendor/plugins/listing_fu/spec
+https://www.d.kth.se/svn/ston
+
+
+
+2009-05-07T18:42:17.739854Z
+795
+frost
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ea376803-88f2-0310-ae1e-238012e6528e
+
+listings_fu_spec.rb
+file
+
+
+
+
+2009-08-08T21:01:29.000000Z
+9d3c613cbac4f69d0ee90c742ac53bb2
+2009-05-07T18:42:17.739854Z
+795
+frost
+
+spec_helper.rb
+file
+
+
+
+
+2009-08-08T21:01:29.000000Z
+5ccef5162cf078a767fbd3e5bbcb8a8e
+2009-05-07T18:42:17.739854Z
+795
+frost
+
